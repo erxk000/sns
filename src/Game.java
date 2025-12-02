@@ -1,0 +1,176 @@
+import java.util.*;
+
+import static java.lang.System.exit;
+
+public class Game {
+
+    private Random random = new Random();
+    private Scanner scanner = new Scanner(System.in);
+
+    private HashMap<String, Room> roomsMap = new HashMap<>();
+    private Player player;
+    private Enemy enemy1;
+
+    String pickItem;
+    String moveChoice;
+    int numOfEnemiesSlain = 0;
+    boolean itemDrop;
+    int itemDropChance;
+
+    Item[] items =
+            {
+                    new Item("Amulet", 30,0,true),
+                    new Item("Bracelet", 15,10,false),
+                    new Item("Hat", 20,0,false),
+                    new Item("Sword", 0, 40, true),
+            };
+
+    ArrayList<Object> inventory = new ArrayList<>();
+
+    // Game class Constructor
+    public Game() {
+        createRooms();
+        enemy1 = new Enemy(36, 80);
+        player = new Player("lone-wolf", 40, 50, 65, 0, 0);
+    }
+
+    private void createRooms() {
+
+        Room dungeon = new Room("Dungeon", true, false, "");
+        Room throneRoom = new Room("Throne Room", false, true, " welcomes you, a strange aura fills your lungs... You are confused and bleeding");
+        Room warehouse = new Room("Old Warehouse", true, true, " has been entered by an entity, was it you? or something else?... who knows");
+        Room hallway = new Room("Hallway", true, false, "Long hallway stares at you, giant silhouette is lingering in the back, it draws its sword, you prepare to attack");
+
+        roomsMap.put("dungeon", dungeon);
+        roomsMap.put("throneRoom", throneRoom);
+        roomsMap.put("warehouse", warehouse);
+        roomsMap.put("hallway", hallway);
+    }
+
+    public void playersLocation(Room room) {
+        // room object is used
+        System.out.println(room.name + room.description);
+
+        if(room.enemyInside) {
+            initiateCombat();
+        } else {
+            System.out.println("There appear to be no enemies near you right now...");
+            System.out.println("What a relief *sigh*");
+        }
+        if(room.itemInside) {
+            itemEncounter();
+        }
+        room.enemyInside = false;
+        room.itemInside = false;
+    }
+
+    public void initiateCombat() {
+        System.out.println("Enemy appeared..");
+        System.out.println();
+        System.out.println(enemy1.enemyInfo());
+        System.out.println();
+        System.out.println(player.playerInfo());
+        System.out.println();
+        do {
+            sleep(3000);
+            System.out.println("Enemy attacked for: " + enemyAttack());
+            sleep(3000);
+            System.out.println("You got hit...");
+            sleep(1000);
+            player.hp -= enemyAttack();
+            if(player.hp <= 0) {
+                System.out.println("You died!!!!");
+                System.out.println("Game Over!");
+                exit(1);
+            }
+            System.out.println("Your HP is now: " + player.hp);
+            sleep(3000);
+            System.out.println("You attack for: " + player.attack);
+            sleep(3000);
+            System.out.println("Enemy got hit..."); // make this a random boolean if you hit or miss
+            sleep(1000);
+            enemy1.hp -= player.attack;
+            if(enemy1.hp <= 0) {
+                System.out.println("Enemy has been slayed");
+                itemDropChance = random.nextInt(0, 101);
+                if(itemDropChance > 50) {
+                    // Adding random item from Items to player's inventory
+                    itemDrop = true;
+                    itemEncounter();
+                }
+                else {
+                    itemDrop = false;
+                    System.out.println("No loot...");
+                }
+                numOfEnemiesSlain++;
+                break;
+            }
+        } while(player.hp > 0 || enemy1.hp > 0);
+    }
+
+    public void itemEncounter() {
+        System.out.println("There is an item laying on the ground");
+        sleep(1000);
+        System.out.print("Do you wish to pick it up? (y/n): ");
+        pickItem = scanner.nextLine().toLowerCase();
+        if(pickItem.equals("y")) {
+            inventory.add(items[random.nextInt(items.length)].type);
+            System.out.println("You picked up: " + inventory.get(0));
+            if(inventory.get(0).equals("Amulet")) {
+                player.hp += items[0].bonusHp;
+                System.out.println(inventory.get(0) + " Gave you +30 HP");
+                System.out.println("Player HP: " + player.hp);
+            }
+            if(inventory.get(0).equals("Bracelet")) {
+                player.hp += items[1].bonusHp;
+                player.attack += items[1].bonusAttack;
+                System.out.println(inventory.get(0) + " Gave you +15 HP & +10 Attack");
+                System.out.println("Player HP: " + player.hp);
+                System.out.println("Player Attack: " + player.attack);
+            }
+            if(inventory.get(0).equals("Hat")) {
+                player.hp += items[2].bonusHp;
+                System.out.println(inventory.get(0) + " Gave you +20 HP");
+                System.out.println("Player HP: " + player.hp);
+            }
+            if(inventory.get(0).equals("Sword")) {
+                player.hp += items[3].bonusAttack;
+                System.out.println(inventory.get(0) + " Gave you +40 Attack");
+                System.out.println("Player Attack: " + player.attack);
+            }
+        }
+        if(pickItem.equals("n")) {
+            System.out.println("You decided to not pick up the item");
+            System.out.println(inventory);
+        }
+    }
+
+    // returns the attack of an enemy
+    public int enemyAttack() {
+        return random.nextInt(25, enemy1.attack);
+    }
+
+    // sleep method
+    public void sleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void start() {
+        playersLocation(roomsMap.get("dungeon"));
+        System.out.print("Do you wish to proceed to the next room? (y/n): ");
+        moveChoice = scanner.nextLine().toLowerCase();
+        if(moveChoice.equals("y")) {
+            playersLocation(roomsMap.get("throneRoom"));
+            if(moveChoice.equals("y")) {
+                playersLocation(roomsMap.get("hallway"));
+            }
+        } else {
+            playersLocation(roomsMap.get("dungeon"));
+        }
+        scanner.close();
+    }
+}

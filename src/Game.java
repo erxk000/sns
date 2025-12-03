@@ -36,10 +36,10 @@ public class Game {
 
     private void createRooms() {
 
-        Room dungeon = new Room("Dungeon", true, false, "");
-        Room throneRoom = new Room("Throne Room", false, true, " welcomes you, a strange aura fills your lungs... You are confused and bleeding");
-        Room warehouse = new Room("Old Warehouse", true, true, " has been entered by an entity, was it you? or something else?... who knows");
-        Room hallway = new Room("Hallway", true, false, "Long hallway stares at you, giant silhouette is lingering in the back, it draws its sword, you prepare to attack");
+        Room dungeon = new Room("Dungeon",", a cold unwelcoming place crawling & festering insect, might be dangerous");
+        Room throneRoom = new Room("Throne Room"," welcomes you, a strange aura fills your lungs... You are confused and bleeding");
+        Room warehouse = new Room("Old Warehouse"," has been entered by an entity, was it you? or something else?... who knows");
+        Room hallway = new Room("Hallway"," stares at you, giant silhouette is lingering in the back, it draws its sword, you prepare to attack");
 
         roomsMap.put("dungeon", dungeon);
         roomsMap.put("throneRoom", throneRoom);
@@ -59,9 +59,9 @@ public class Game {
         }
         if(room.itemInside) {
             itemEncounter();
+        } else {
+            System.out.println("No loot... ");
         }
-        room.enemyInside = false;
-        room.itemInside = false;
     }
 
     public void initiateCombat() {
@@ -71,6 +71,8 @@ public class Game {
         System.out.println();
         System.out.println(player.playerInfo());
         System.out.println();
+
+        // Todo game fighting mechanics
         do {
             sleep(3000);
             System.out.println("Enemy attacked for: " + enemyAttack());
@@ -150,6 +152,11 @@ public class Game {
         return random.nextInt(25, enemy1.attack);
     }
 
+    // resets the enemy health
+    public void resetEnemyHealth() {
+        enemy1.hp = 80;
+    };
+
     // sleep method
     public void sleep(int time) {
         try {
@@ -163,8 +170,11 @@ public class Game {
         playersLocation(roomsMap.get("dungeon"));
         System.out.print("Do you wish to proceed to the next room? (y/n): ");
         moveChoice = scanner.nextLine().toLowerCase();
+        resetEnemyHealth();
         if(moveChoice.equals("y")) {
             playersLocation(roomsMap.get("throneRoom"));
+            System.out.print("Do you wish to proceed to the next room? (y/n): ");
+            moveChoice = scanner.nextLine().toLowerCase();
             if(moveChoice.equals("y")) {
                 playersLocation(roomsMap.get("hallway"));
             }

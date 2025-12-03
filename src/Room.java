@@ -1,14 +1,16 @@
+import java.util.Random;
+
 public class Room {
+
+    Random random = new Random();
 
     String name;
     String description;
-    boolean enemyInside;
-    boolean itemInside;
+    boolean enemyInside = random.nextInt(100) < 30;
+    boolean itemInside = random.nextInt(100) < 50;
 
-    Room(String name, boolean enemyInside, boolean itemInside, String description) {
+    Room(String name, String description) {
         this.name = name;
-        this.enemyInside = enemyInside;
-        this.itemInside = itemInside;
         this.description = description;
     }
 }

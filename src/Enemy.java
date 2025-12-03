@@ -1,6 +1,10 @@
+import java.util.Random;
+
 public class Enemy {
 
+    Random random = new Random();
 
+    boolean itemDrop = random.nextInt(100) < 50;
     int attack;
     int hp;
 

@@ -65,6 +65,10 @@ public class Game {
     }
 
     public void initiateCombat() {
+        // Assigning the value returned fromm the enemyAttacks() method to the new variable
+        int enemyAttackNumber = enemyAttacks();
+
+        // Combat stats overview
         System.out.println("Enemy appeared..");
         System.out.println();
         System.out.println(enemy1.enemyInfo());
@@ -75,11 +79,11 @@ public class Game {
         // Todo game fighting mechanics
         do {
             sleep(3000);
-            System.out.println("Enemy attacked for: " + enemyAttack());
+            System.out.println("Enemy attacked for: " + enemyAttackNumber);
             sleep(3000);
             System.out.println("You got hit...");
             sleep(1000);
-            player.hp -= enemyAttack();
+            player.hp -= enemyAttackNumber;
             if(player.hp <= 0) {
                 System.out.println("You died!!!!");
                 System.out.println("Game Over!");
@@ -94,15 +98,10 @@ public class Game {
             enemy1.hp -= player.attack;
             if(enemy1.hp <= 0) {
                 System.out.println("Enemy has been slayed");
-                itemDropChance = random.nextInt(0, 101);
-                if(itemDropChance > 50) {
+                //itemDropChance = random.nextInt(0, 101);
+                if(enemy1.itemDrop) {
                     // Adding random item from Items to player's inventory
-                    itemDrop = true;
                     itemEncounter();
-                }
-                else {
-                    itemDrop = false;
-                    System.out.println("No loot...");
                 }
                 numOfEnemiesSlain++;
                 break;
@@ -148,7 +147,7 @@ public class Game {
     }
 
     // returns the attack of an enemy
-    public int enemyAttack() {
+    public int enemyAttacks() {
         return random.nextInt(25, enemy1.attack);
     }
 

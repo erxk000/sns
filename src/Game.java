@@ -167,6 +167,7 @@ public class Game {
     }
 
     public void start() {
+        // Todo make this a loop?
         playersLocation(roomsMap.get("dungeon"));
         System.out.print("Do you wish to proceed to the next room? (y/n): ");
         moveChoice = scanner.nextLine().toLowerCase();
@@ -177,8 +178,10 @@ public class Game {
             moveChoice = scanner.nextLine().toLowerCase();
             if(moveChoice.equals("y")) {
                 playersLocation(roomsMap.get("hallway"));
+            } else if(moveChoice.equals("n")) {
+                playersLocation(roomsMap.get("throneRoom"));
             }
-        } else {
+        } else if(moveChoice.equals("n")) {
             playersLocation(roomsMap.get("dungeon"));
         }
         scanner.close();

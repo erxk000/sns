@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.*;
 
 import static java.lang.System.exit;
@@ -14,8 +16,6 @@ public class Game {
     String pickItem;
     String moveChoice;
     int numOfEnemiesSlain = 0;
-    boolean itemDrop;
-    int itemDropChance;
 
     Item[] items =
             {
@@ -185,4 +185,23 @@ public class Game {
         }
         scanner.close();
     }
+
+    //Todo Implement!!!!
+    public void gamePlayUI(String levelInput) {
+        System.out.println("======================");
+        System.out.println(
+                """
+                'A' - Attack
+                'I' - Show Inventory """);
+        System.out.println("======================");
+        scanner.nextLine();
+        levelInput = scanner.nextLine().toLowerCase();
+
+        switch(levelInput) {
+            case "a" -> initiateCombat();
+            case "i" -> System.out.println(inventory);
+            default -> System.out.println("invalid input");
+        }
+    }
+
 }

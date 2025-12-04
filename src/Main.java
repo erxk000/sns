@@ -16,8 +16,9 @@ public class Main {
         System.out.println("=================");
         System.out.println();
 
-        game.start();
         // test
+        //game.start();
+        game.gamePlayUI("");
 
         exit(1);
     }

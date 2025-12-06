@@ -50,9 +50,23 @@ public class Game {
     public void playersLocation(Room room) {
         // room object is used
         System.out.println(room.name + room.description);
+        String UIchoice = scanner.nextLine();
 
         if(room.enemyInside) {
-            initiateCombat();
+            while (room.enemyInside) {
+                System.out.println("Enemy appeared..");
+                System.out.println();
+                System.out.println(enemy1.enemyInfo());
+                System.out.println();
+                System.out.println(player.playerInfo());
+                System.out.println();
+                displayUI(UIchoice);
+                if (UIchoice.equals("a")) {
+                    initiateCombat();
+                    // Todo if enemy is defeated set enemyInside to false, this is workaround for now
+                    room.enemyInside = false;
+                }
+            }
         } else {
             System.out.println("There appear to be no enemies near you right now...");
             System.out.println("What a relief *sigh*");
@@ -69,12 +83,6 @@ public class Game {
         int enemyAttackNumber = enemyAttacks();
 
         // Combat stats overview
-        System.out.println("Enemy appeared..");
-        System.out.println();
-        System.out.println(enemy1.enemyInfo());
-        System.out.println();
-        System.out.println(player.playerInfo());
-        System.out.println();
 
         // Todo game fighting mechanics
         do {
@@ -187,21 +195,25 @@ public class Game {
     }
 
     //Todo Implement!!!!
-    public void gamePlayUI(String levelInput) {
+    public String displayUI(String levelInput) {
         System.out.println("======================");
         System.out.println(
                 """
                 'A' - Attack
                 'I' - Show Inventory """);
         System.out.println("======================");
-        scanner.nextLine();
-        levelInput = scanner.nextLine().toLowerCase();
+        System.out.print("Please choose your next move: ");
+        while(!levelInput.equals("a") && !levelInput.equals("i")) {
+            levelInput = scanner.nextLine().toLowerCase();
+        }
 
         switch(levelInput) {
             case "a" -> initiateCombat();
             case "i" -> System.out.println(inventory);
             default -> System.out.println("invalid input");
         }
+
+        return levelInput;
     }
 
 }

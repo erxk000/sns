@@ -17,8 +17,8 @@ public class Main {
         System.out.println();
 
         // test
-        //game.start();
-        game.gamePlayUI("");
+        game.start();
+        //game.displayUI("");
 
         exit(1);
     }

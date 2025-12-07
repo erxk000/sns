@@ -58,20 +58,8 @@ public class Game {
             System.out.println();
             System.out.println(enemy1.enemyInfo());
             System.out.println();
-            System.out.println("======================");
-            System.out.println(
-                    """
-                    'A' - Attack
-                    'I' - Show Inventory """);
-            System.out.println("======================");
-            System.out.print("Please choose your next move: ");
-            do {
-                UIchoice = scanner.nextLine().toLowerCase();
-            } while(!UIchoice.equals("a") && !UIchoice.equals("i"));
-//            UIchoice = scanner.nextLine();
-            System.out.println();
-            displayUI(UIchoice);
-            if(UIchoice.equals("a")) {
+            String menuChoice = displayUI(UIchoice);
+            if(menuChoice.equals("a")) {
                 do {
                     initiateCombat();
 
@@ -219,9 +207,10 @@ public class Game {
                 'A' - Attack
                 'I' - Show Inventory """);
         System.out.println("======================");
-        while(!levelInput.equals("a") && !levelInput.equals("i")) {
-            levelInput = scanner.nextLine().toLowerCase();
-        }
+        System.out.print("Please choose your next move: ");
+        do {
+            return UIchoice = scanner.nextLine().toLowerCase();
+        } while(!UIchoice.equals("a") && !UIchoice.equals("i"));
 
 //        switch(levelInput) {
 //            case "a" -> initiateCombat();
@@ -229,7 +218,7 @@ public class Game {
 //            default -> System.out.println("invalid input");
 //        }
 
-        return levelInput;
+        //return levelInput;
     }
 
 }

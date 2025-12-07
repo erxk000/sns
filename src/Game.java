@@ -16,6 +16,7 @@ public class Game {
     String pickItem;
     String moveChoice;
     int numOfEnemiesSlain = 0;
+    String UIchoice;
 
     Item[] items =
             {
@@ -50,22 +51,36 @@ public class Game {
     public void playersLocation(Room room) {
         // room object is used
         System.out.println(room.name + room.description);
-        String UIchoice = scanner.nextLine();
+        System.out.println(player.playerInfo());
 
         if(room.enemyInside) {
-            while (room.enemyInside) {
-                System.out.println("Enemy appeared..");
-                System.out.println();
-                System.out.println(enemy1.enemyInfo());
-                System.out.println();
-                System.out.println(player.playerInfo());
-                System.out.println();
-                displayUI(UIchoice);
-                if (UIchoice.equals("a")) {
+            System.out.println("Enemy appeared..");
+            System.out.println();
+            System.out.println(enemy1.enemyInfo());
+            System.out.println();
+            System.out.println("======================");
+            System.out.println(
+                    """
+                    'A' - Attack
+                    'I' - Show Inventory """);
+            System.out.println("======================");
+            System.out.print("Please choose your next move: ");
+            do {
+                UIchoice = scanner.nextLine().toLowerCase();
+            } while(!UIchoice.equals("a") && !UIchoice.equals("i"));
+//            UIchoice = scanner.nextLine();
+            System.out.println();
+            displayUI(UIchoice);
+            if(UIchoice.equals("a")) {
+                do {
                     initiateCombat();
-                    // Todo if enemy is defeated set enemyInside to false, this is workaround for now
-                    room.enemyInside = false;
-                }
+
+                } while (enemy1.hp > 0);
+                // Todo if enemy is defeated set enemyInside to false, this is workaround for now
+            } else if(UIchoice.equals("i")) {
+                System.out.println(inventory);
+                scanner.nextLine();
+                displayUI(UIchoice);
             }
         } else {
             System.out.println("There appear to be no enemies near you right now...");
@@ -80,12 +95,13 @@ public class Game {
 
     public void initiateCombat() {
         // Assigning the value returned fromm the enemyAttacks() method to the new variable
-        int enemyAttackNumber = enemyAttacks();
+        int enemyAttackNumber;
 
         // Combat stats overview
 
         // Todo game fighting mechanics
         do {
+            enemyAttackNumber = enemyAttacks();
             sleep(3000);
             System.out.println("Enemy attacked for: " + enemyAttackNumber);
             sleep(3000);
@@ -114,7 +130,7 @@ public class Game {
                 numOfEnemiesSlain++;
                 break;
             }
-        } while(player.hp > 0 || enemy1.hp > 0);
+        } while(player.hp > 0); // && enemy1.hp > 0
     }
 
     public void itemEncounter() {
@@ -156,7 +172,8 @@ public class Game {
 
     // returns the attack of an enemy
     public int enemyAttacks() {
-        return random.nextInt(25, enemy1.attack);
+        int attackNumber = random.nextInt(25, enemy1.attack);
+        return attackNumber;
     }
 
     // resets the enemy health
@@ -202,16 +219,15 @@ public class Game {
                 'A' - Attack
                 'I' - Show Inventory """);
         System.out.println("======================");
-        System.out.print("Please choose your next move: ");
         while(!levelInput.equals("a") && !levelInput.equals("i")) {
             levelInput = scanner.nextLine().toLowerCase();
         }
 
-        switch(levelInput) {
-            case "a" -> initiateCombat();
-            case "i" -> System.out.println(inventory);
-            default -> System.out.println("invalid input");
-        }
+//        switch(levelInput) {
+//            case "a" -> initiateCombat();
+//            case "i" -> System.out.println(inventory);
+//            default -> System.out.println("invalid input");
+//        }
 
         return levelInput;
     }

@@ -59,17 +59,18 @@ public class Game {
             System.out.println(enemy1.enemyInfo());
             System.out.println();
             String menuChoice = displayUI(UIchoice);
+            // Todo playersMenu(String menuChoice) implement a method that will accept a string
+            playersMenu(menuChoice);
             if(menuChoice.equals("a")) {
                 do {
                     initiateCombat();
 
                 } while (enemy1.hp > 0);
                 // Todo if enemy is defeated set enemyInside to false, this is workaround for now
-            } else if(UIchoice.equals("i")) {
-                System.out.println(inventory);
-                scanner.nextLine();
-                displayUI(UIchoice);
             }
+//            else if(UIchoice.equals("i")) {
+//                displayUI(UIchoice);
+//            }
         } else {
             System.out.println("There appear to be no enemies near you right now...");
             System.out.println("What a relief *sigh*");
@@ -86,7 +87,6 @@ public class Game {
         int enemyAttackNumber;
 
         // Combat stats overview
-
         // Todo game fighting mechanics
         do {
             enemyAttackNumber = enemyAttacks();
@@ -166,6 +166,7 @@ public class Game {
 
     // resets the enemy health
     public void resetEnemyHealth() {
+        // Todo fix enemy's health dynamically
         enemy1.hp = 80;
     };
 
@@ -212,6 +213,7 @@ public class Game {
             return UIchoice = scanner.nextLine().toLowerCase();
         } while(!UIchoice.equals("a") && !UIchoice.equals("i"));
 
+
 //        switch(levelInput) {
 //            case "a" -> initiateCombat();
 //            case "i" -> System.out.println(inventory);
@@ -221,4 +223,27 @@ public class Game {
         //return levelInput;
     }
 
+    public void playersMenu(String choice) {
+        while(choice.equals("i")) {
+            if(inventory.isEmpty()) {
+                System.out.println("Your inventory does not contain any items yet");
+            } else {
+                System.out.print("Your inventory: " + inventory);
+            }
+            System.out.println();
+            System.out.println("======================");
+            System.out.println(
+                    """
+                    'A' - Attack
+                    'I' - Show Inventory """);
+            System.out.println("======================");
+            System.out.print("Please choose your next move: ");
+//            displayUI(choice);
+            choice = scanner.nextLine();
+        };
+
+        if(choice.equals("a")) {
+            initiateCombat();
+        }
+    }
 }
